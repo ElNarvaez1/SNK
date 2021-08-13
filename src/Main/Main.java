@@ -5,7 +5,6 @@
  */
 package Main;
 
-import elementos.RowTS;
 import sintaxis.Syntax;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lexico.LexerCup;
+import tabla.TablaSimbolos;
 import test.TestLexerCup;
 
 /**
@@ -44,16 +44,14 @@ public class Main {
             sintaxis.parse();//El metodo evalua todo de golpe
             System.out.println("Analisis Correcto.");
 
-            List<RowTS> tablaSimbolos = sintaxis.getSymbolTable();
+            TablaSimbolos tablaSimbolos = sintaxis.getSymbolTable();
             /*
                 El metodo "getSymbolTable" esta definido dentro del 
                 bloque "parser code" del archivo -Syntax.cup-
              */
             System.out.println("TABLA DE SIMBOLOS...");
             //Impirada en este video :https://youtu.be/eB_n44tTjAw
-            for (RowTS fila : tablaSimbolos) {
-                System.out.println(fila);
-            }
+            tablaSimbolos.imprimir();
             /*
                 Aun falta pulir la tabla de smbolos
                 pero, ya tenemos la base de lo que se necesita

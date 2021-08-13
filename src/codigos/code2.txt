@@ -1,14 +1,11 @@
 public class Hola{
-
     int g;
     int g;
-
     float t=10;
-    public omar(){
-        float varConts; 
-                
+    public Hola(){
+        float varConts;           
     }
-    public void metodo(){
+    public void calcArea(){
         int h;
     }
     public void metodo(){

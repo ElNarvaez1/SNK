@@ -6,7 +6,7 @@
 package Main;
 
 import elementos.RowET;
-import elementos.RowTS;
+import tabla.RowTS;
 import sintaxis.Syntax;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -46,7 +46,7 @@ public class Main2 {
             sintaxis.parse();//El metodo evalua todo de golpe
             System.out.println("Analisis Correcto.");
 
-            List<RowTS> tablaSimbolos = sintaxis.getSymbolTable();
+            //List<RowTS> tablaSimbolos = sintaxis.getSymbolTable();
             /*
                 El metodo "getSymbolTable" esta definido dentro del 
                 bloque "parser code" del archivo -Syntax.cup-
