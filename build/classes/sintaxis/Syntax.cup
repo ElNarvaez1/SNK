@@ -1,0 +1,206 @@
+package sintaxis;
+
+//Imports para la clase Java 
+    
+    import java_cup.runtime.Symbol;
+    import java.util.Hashtable;
+    import elementos.*;
+    import java.util.List;
+    import java.util.ArrayList;
+
+//Codigo que se transcribira en el archivo "Syntax.java"
+parser code
+{:
+    private Symbol s;
+    private String ambito = "Global";
+
+    private List<RowTS> SymbolTable=new ArrayList<>();
+    private List<RowET> ErrorTable=new ArrayList<>();
+
+    public void syntax_error(Symbol s){
+        this.s = s;
+
+        //super.syntax_error(s);
+
+        //System.out.println("scbscbdjsdcbjshb");
+        RowET error=new RowET(this.s.value.toString(),this.s.right,this.s.left,"Error sintactica CREO XD");
+        ErrorTable.add(error);    
+    }
+     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        RowET error=new RowET(this.s.value.toString(),this.s.right,this.s.left,"Error sintactica CREO XD");
+        ErrorTable.add(error);
+        
+        //super.unrecovered_syntax_error(s);
+        //Al quitar esta linea el analisis continua, aunque tengas 
+        //un error
+    }
+    public Symbol getS(){
+        return this.s;
+    }
+    public List<RowTS> getSymbolTable(){
+        return SymbolTable;
+    } 
+    public List<RowET> getErrorTable(){
+        return ErrorTable;
+    }    
+
+
+    /*
+        Analiza los posibles errores semanticos que puedo tener el codigo que estamos analizando.
+        @param linea La linea de codigo que estamos analizand.
+    */
+    public void sematic_error(RowTS linea){
+        for(int i=0;i<SymbolTable.size();i++){
+                RowTS fila = SymbolTable.get(i);
+
+                //Este IF evalua si una variable esta repetida o no.    
+                if(fila.equals(linea) && fila != linea){
+                   RowET error = new RowET(linea.getLexema(),i,0,"Error semantico, Nombre repetida.");
+                   ErrorTable.add(error);    
+                }
+
+                //Evaluamos si el nombre del constructor es el mismo que el de la clase.
+                if(fila.getToken() == Tokens.CLASS && linea.getToken() == Tokens.CONSTRUCTOR){
+                     if(!fila.getLexema().equalsIgnoreCase(linea.getLexema()) ){
+                        RowET error = new RowET(linea.getLexema(),i,0,"Error semantico, Constructor erroneo.");
+                        ErrorTable.add(error);
+                     }
+                }    
+        }
+    }
+:};
+
+
+//----------------------Simbolos Terminales.---------------------
+
+
+terminal  PUBLIC, CLASS, 
+          THIS, RETURN,
+          VOID, INT, 
+          FLOAT, IF,
+          ELSE, WHILE, 
+          RESERVADAS, IGUAL, 
+          SUMA, RESTA,
+          MULTIPLICACION, DIVISION, 
+          IDENTIFICADOR, NUMERO, 
+          PARENTESIS_A, PARENTESIS_C,
+          MENOR_QUE, MAYOR_QUE,
+          LLAVE_A, LLAVE_C,
+          FIN_LINEA, ERROR
+;
+
+//----------------------Simbolos No terminales.---------------------
+non terminal INICIO, CONSTRUCTOR,
+             SENTENCIA, DECLARACION, 
+             METODOVOID, METODOINT, 
+             METODOFLOAT;
+
+start with INICIO;
+
+INICIO ::= 
+    PUBLIC CLASS IDENTIFICADOR:claseNombre{:
+            RowTS fila=new RowTS(claseNombre.toString(),Tokens.CLASS,"Master",SymbolTable.size(),Tokens.CLASS.getDescripcion()); 
+            SymbolTable.add(fila);
+        :}
+        LLAVE_A
+            SENTENCIA 
+        LLAVE_C
+;
+
+
+
+
+SENTENCIA ::= 
+    DECLARACION  
+    | DECLARACION SENTENCIA
+    | CONSTRUCTOR
+    | CONSTRUCTOR SENTENCIA
+    | METODOVOID
+    | METODOVOID SENTENCIA
+    | METODOINT  
+    | METODOINT SENTENCIA
+    | METODOFLOAT 
+    | METODOFLOAT SENTENCIA
+;
+
+METODOVOID ::=
+        PUBLIC VOID IDENTIFICADOR:nomIdent{:ambito=nomIdent.toString();:} PARENTESIS_A PARENTESIS_C
+            {:
+                RowTS fila=new RowTS(nomIdent.toString(),Tokens.VOID,"Global",SymbolTable.size(),Tokens.VOID.getDescripcion()); 
+                SymbolTable.add(fila);
+                sematic_error(fila);
+            :}
+        LLAVE_A
+            DECLARACION 
+        LLAVE_C
+;
+
+METODOINT ::=
+        PUBLIC INT IDENTIFICADOR:nomIdent{:ambito=nomIdent.toString();:} PARENTESIS_A PARENTESIS_C
+            {:
+		RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,"Global",SymbolTable.size(),Tokens.INT.getDescripcion()); 
+                SymbolTable.add(fila);
+                sematic_error(fila);
+            :}
+        LLAVE_A
+            DECLARACION 
+        LLAVE_C
+;
+
+METODOFLOAT ::=
+        PUBLIC FLOAT:f IDENTIFICADOR:nomIdent{:ambito=nomIdent.toString();:} PARENTESIS_A PARENTESIS_C
+            {:
+                RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,"Global",SymbolTable.size(),Tokens.FLOAT.getDescripcion()); 
+                SymbolTable.add(fila);
+                sematic_error(fila);
+            :}
+        LLAVE_A
+            DECLARACION 
+        LLAVE_C
+;
+
+
+
+DECLARACION ::=
+    INT IDENTIFICADOR:nomIdent FIN_LINEA{:
+
+               //nomIdent => Nombre del identificador
+               RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,SymbolTable.size(),Tokens.INT.getDescripcion()); 
+               SymbolTable.add(fila);
+               sematic_error(fila);
+        :}
+    | FLOAT IDENTIFICADOR:nomIdent FIN_LINEA{:
+
+               //nomIdent => Nombre del identificador
+               RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,SymbolTable.size(),Tokens.FLOAT.getDescripcion()); 
+               SymbolTable.add(fila);
+               sematic_error(fila);
+        :}
+    | INT IDENTIFICADOR:nomIdent IGUAL NUMERO FIN_LINEA{:
+
+               //nomIdent => Nombre del identificador
+               RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,SymbolTable.size(),Tokens.INT.getDescripcion()); 
+               SymbolTable.add(fila);
+               sematic_error(fila);
+        :}
+    | FLOAT IDENTIFICADOR:nomIdent IGUAL NUMERO FIN_LINEA{:
+
+               //nomIdent => Nombre del identificador
+               RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,SymbolTable.size(),Tokens.FLOAT.getDescripcion()); 
+               SymbolTable.add(fila);
+               sematic_error(fila);
+        :}
+;
+CONSTRUCTOR ::=
+    PUBLIC IDENTIFICADOR:nombre PARENTESIS_A PARENTESIS_C{:
+
+	//nomIdent => Nombre del identificador
+        RowTS fila=new RowTS(nombre.toString(),Tokens.CONSTRUCTOR,ambito,SymbolTable.size(),Tokens.CONSTRUCTOR.getDescripcion()); 
+        SymbolTable.add(fila);
+        ambito = nombre.toString();
+        sematic_error(fila);
+    :} 
+    LLAVE_A
+            DECLARACION 
+    LLAVE_C
+;

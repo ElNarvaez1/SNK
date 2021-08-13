@@ -1,0 +1,13 @@
+public class Hola{
+    int g;
+    float t=10;
+    public Hola(){
+        float varConts; 
+    }
+    public void metodo(){
+        int h;
+    }
+    public void metodo2(){
+        int h;
+    }
+}

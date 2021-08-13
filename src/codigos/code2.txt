@@ -1,0 +1,20 @@
+public class Hola{
+
+    int g;
+    int g;
+
+    float t=10;
+    public omar(){
+        float varConts; 
+                
+    }
+    public void metodo(){
+        int h;
+    }
+    public void metodo(){
+        int mmm;
+    }
+    public int metodo2(){
+        int h;
+    }
+}
