@@ -15,28 +15,26 @@ import java.util.Map;
  */
 public class TablaSimbolos {
 
-    private final HashMap<String, RowTS> tabla;
+    private final HashMap<String, Simbolo> tabla;
 
     public TablaSimbolos() {
-        this.tabla = new HashMap<String, RowTS>();
+        this.tabla = new HashMap<String, Simbolo>();
 
     }
 
-    public void addSimbolo(String identificador, RowTS fila) {
+    public void addSimbolo(String identificador, Simbolo fila) {
         try {
-            
-            RowTS temp = tabla.put(identificador, fila);
-            if(temp != null){
-                System.out.println("Repetido: "+fila);
+            Simbolo temp = tabla.put(identificador, fila);
+            if (temp != null) {
+                System.out.println("Repetido: " + temp);
             }
         } catch (Exception e) {
             System.out.println("Error al agregar el simbolo");
         }
     }
 
-    
-    public RowTS buscarSimbolo(String identificador) {
-        RowTS retorno = tabla.get(identificador);
+    public Simbolo buscarSimbolo(String identificador) {
+        Simbolo retorno = tabla.get(identificador);
         if (retorno != null) {
             return retorno;
         }
@@ -46,11 +44,12 @@ public class TablaSimbolos {
     public void imprimir() {
         Iterator it = tabla.values().iterator();
         while (it.hasNext()) {
-            RowTS s = (RowTS) it.next();
+            Simbolo s = (Simbolo) it.next();
             System.out.println(s.toString());
         }
     }
-    public int size(){
+
+    public int size() {
         return tabla.size();
     }
 

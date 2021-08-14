@@ -65,7 +65,7 @@ public class Main {
                     sintaxis.getS().value.toString(), sintaxis.getS().right + 1);
             //Logger.getLogger(TestLexerCup.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("----------------------------------------");
-        sintaxis.getErrorTable().forEach(e->System.out.println(e));
+        //System.out.println("----------------------------------------");
+       // sintaxis.getErrorTable().forEach(e->System.out.println(e));
     }
 }

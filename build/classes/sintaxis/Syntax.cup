@@ -9,12 +9,14 @@ package sintaxis;
     import java.util.ArrayList;
     import tabla.TablaSimbolos;
     import tabla.RowTS;
+    import tabla.Simbolo;
 
 //Codigo que se transcribira en el archivo "Syntax.java"
 parser code
 {:
     private Symbol s;
-    private String ambito = "Global";
+    private String ambito = "GLOBAL";
+    private int numinea = 0;
 
     private TablaSimbolos SymbolTable=new TablaSimbolos();
     private List<RowET> ErrorTable=new ArrayList<>();
@@ -49,9 +51,14 @@ parser code
 
     /*
         Analiza los posibles errores semanticos que puedo tener el codigo que estamos analizando.
-        @param linea La linea de codigo que estamos analizand.
+        Falta componerlo aun 
+        @param linea La linea de codigo que estamos analizando.
     */
     public void sematic_error(RowTS linea){
+        RowET error = new RowET(linea.getLexema(),0,0,"Error semantico.");
+        ErrorTable.add(error);
+
+
         /*
         for(int i=0;i<SymbolTable.size();i++){
                 RowTS fila = SymbolTable.get(i);
@@ -103,8 +110,15 @@ start with INICIO;
 
 INICIO ::= 
     PUBLIC CLASS IDENTIFICADOR:claseNombre{:
-            RowTS fila=new RowTS(claseNombre.toString(),Tokens.CLASS,"Master",claseNombreright,Tokens.CLASS.getDescripcion()); 
-            SymbolTable.addSimbolo(claseNombre.toString(),fila);
+            //RowTS fila=new RowTS(claseNombre.toString(),Tokens.CLASS,"Master",claseNombreright,Tokens.CLASS.getDescripcion()); 
+            Simbolo simTemp=new Simbolo(claseNombre.toString());
+            simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+            simTemp.addCampo("Ambito: ","Maestro");    
+            simTemp.addCampo("Linea: ",claseNombreright+1);    
+            simTemp.addCampo("Tipo: ",Tokens.CLASS);    
+            simTemp.addCampo("Descripcion:" ,"Nombre de la clase"); 
+   
+            SymbolTable.addSimbolo(claseNombre.toString(),simTemp);
         :}
         LLAVE_A
             SENTENCIA 
@@ -130,9 +144,18 @@ SENTENCIA ::=
 METODOVOID ::=
         PUBLIC VOID IDENTIFICADOR:nomIdent{:ambito=nomIdent.toString();:} PARENTESIS_A PARENTESIS_C
             {:
-                RowTS fila=new RowTS(nomIdent.toString(),Tokens.VOID,"Global",nomIdentright,Tokens.VOID.getDescripcion()); 
-                SymbolTable.addSimbolo(nomIdent.toString(),fila);
-                sematic_error(fila);
+                //RowTS fila=new RowTS(nomIdent.toString(),Tokens.VOID,"GLOBAL",nomIdentright,Tokens.VOID.getDescripcion()); 
+
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ","GLOBAL");    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ",Tokens.METHOD);    
+                simTemp.addCampo("Returno: ",Tokens.VOID);    
+                simTemp.addCampo("Descripcion: ","Nombre de un metodo"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);
+                //sematic_error(simTemp);
             :}
         LLAVE_A
             DECLARACION 
@@ -142,9 +165,20 @@ METODOVOID ::=
 METODOINT ::=
         PUBLIC INT IDENTIFICADOR:nomIdent{:ambito=nomIdent.toString();:} PARENTESIS_A PARENTESIS_C
             {:
-		RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,"Global",nomIdentright,Tokens.INT.getDescripcion()); 
-                SymbolTable.addSimbolo(nomIdent.toString(),fila);
-                sematic_error(fila);
+		//RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,"GLOBAL",nomIdentright,Tokens.INT.getDescripcion()); 
+                
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ","GLOBAL");    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ",Tokens.METHOD);    
+                simTemp.addCampo("Returno: ",Tokens.INT);    
+                simTemp.addCampo("Descripcion: ","Nombre de un metodo"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);    
+
+                //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+                //sematic_error(fila);
             :}
         LLAVE_A
             DECLARACION 
@@ -154,9 +188,21 @@ METODOINT ::=
 METODOFLOAT ::=
         PUBLIC FLOAT:f IDENTIFICADOR:nomIdent{:ambito=nomIdent.toString();:} PARENTESIS_A PARENTESIS_C
             {:
-                RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,"Global",nomIdentright,Tokens.FLOAT.getDescripcion()); 
-                SymbolTable.addSimbolo(nomIdent.toString(),fila);
-                sematic_error(fila);
+                //RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,"GLOBAL",nomIdentright,Tokens.FLOAT.getDescripcion()); 
+                
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ","GLOBAL");    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ",Tokens.METHOD);    
+                simTemp.addCampo("Returno: ",Tokens.FLOAT);    
+                simTemp.addCampo("Descripcion: ","Nombre de un metodo"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);    
+    
+
+                //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+                //sematic_error(fila);
             :}
         LLAVE_A
             DECLARACION 
@@ -169,42 +215,97 @@ DECLARACION ::=
     INT IDENTIFICADOR:nomIdent FIN_LINEA{:
 
                //nomIdent => Nombre del identificador
-               RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,nomIdentright,Tokens.INT.getDescripcion()); 
-               SymbolTable.addSimbolo(nomIdent.toString(),fila);
-               sematic_error(fila);
+               //RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,nomIdentright,Tokens.INT.getDescripcion()); 
+               
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ",ambito);    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ","Variable");    
+                simTemp.addCampo("Tipo Dato: ",Tokens.INT);    
+                simTemp.addCampo("Descripcion: ","Nombre de variable"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp); 
+
+
+               //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+               //sematic_error(fila);
         :}
     | FLOAT IDENTIFICADOR:nomIdent FIN_LINEA{:
 
                //nomIdent => Nombre del identificador
-               RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,nomIdentright,Tokens.FLOAT.getDescripcion()); 
-               SymbolTable.addSimbolo(nomIdent.toString(),fila);
-               sematic_error(fila);
+               //RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,nomIdentright,Tokens.FLOAT.getDescripcion()); 
+               
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ",ambito);    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ","Variable");    
+                simTemp.addCampo("Tipo Dato: ",Tokens.FLOAT);    
+                simTemp.addCampo("Descripcion: ","Nombre de variable"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp); 
+
+               //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+               //sematic_error(fila);
         :}
     | INT IDENTIFICADOR:nomIdent IGUAL NUMERO FIN_LINEA{:
 
                //nomIdent => Nombre del identificador
-               RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,nomIdentright,Tokens.INT.getDescripcion()); 
-               SymbolTable.addSimbolo(nomIdent.toString(),fila);
-               sematic_error(fila);
+               //RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,nomIdentright,Tokens.INT.getDescripcion()); 
+               
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ",ambito);    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ","Variable");    
+                simTemp.addCampo("Tipo Dato: ",Tokens.INT);    
+                simTemp.addCampo("Descripcion: ","Nombre de variable"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);
+
+               //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+               //sematic_error(fila);
         :}
     | FLOAT IDENTIFICADOR:nomIdent IGUAL NUMERO FIN_LINEA{:
 
                //nomIdent => Nombre del identificador
-               RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,nomIdentright,Tokens.FLOAT.getDescripcion()); 
-               SymbolTable.addSimbolo(nomIdent.toString(),fila);
-               sematic_error(fila);
+               //RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,nomIdentright,Tokens.FLOAT.getDescripcion()); 
+               
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ",ambito);    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ","Variable");    
+                simTemp.addCampo("Tipo Dato: ",Tokens.FLOAT);    
+                simTemp.addCampo("Descripcion: ","Nombre de variable"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);
+
+               //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+               //sematic_error(fila);
         :}
 ;
 CONSTRUCTOR ::=
     PUBLIC IDENTIFICADOR:nombre PARENTESIS_A PARENTESIS_C{:
 
 	//nomIdent => Nombre del identificador
-        RowTS fila=new RowTS(nombre.toString(),Tokens.CONSTRUCTOR,ambito,nombreright,Tokens.CONSTRUCTOR.getDescripcion()); 
+        //RowTS fila=new RowTS(nombre.toString(),Tokens.CONSTRUCTOR,ambito,nombreright,Tokens.CONSTRUCTOR.getDescripcion()); 
         if(SymbolTable.buscarSimbolo(nombre.toString()) != null){
-            SymbolTable.addSimbolo(nombre.toString()+"_C",fila);
+                
+                Simbolo simTemp=new Simbolo(nombre.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ","GLOBAL");    
+                simTemp.addCampo("Linea: ",(nombreright+1));    
+                simTemp.addCampo("Tipo: ",Tokens.CONSTRUCTOR);       
+                simTemp.addCampo("Descripcion: ","Nombre del constructor"); 
+   
+                SymbolTable.addSimbolo(nombre.toString()+"_C",simTemp);
+            
+            //SymbolTable.addSimbolo(nombre.toString()+"_C",fila);
             ambito = nombre.toString();
         }else{
-            sematic_error(fila);
+            //sematic_error(fila);
         }
     :} 
     LLAVE_A

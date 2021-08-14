@@ -23,7 +23,8 @@ public enum Tokens {
     MENOR_QUE("COMPARADOR LOGICO"), MAYOR_QUE("COMPARADOR LOGICO"),
     LLAVE_A("INICIO BLOQUE"), LLAVE_C("FIN BLOQUE"),
     FIN_LINEA("FIN DE LINEA"), ERROR("ERROR"),
-    CONSTRUCTOR("CONSTRUCTOR");
+    CONSTRUCTOR("CONSTRUCTOR"),
+    METHOD("METODO");
     private String descripcion;
 
     private Tokens(String descripcion) {

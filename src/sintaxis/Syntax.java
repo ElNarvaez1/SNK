@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.ArrayList;
 import tabla.TablaSimbolos;
 import tabla.RowTS;
+import tabla.Simbolo;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -167,7 +168,8 @@ public class Syntax extends java_cup.runtime.lr_parser {
 
 
     private Symbol s;
-    private String ambito = "Global";
+    private String ambito = "GLOBAL";
+    private int numinea = 0;
 
     private TablaSimbolos SymbolTable=new TablaSimbolos();
     private List<RowET> ErrorTable=new ArrayList<>();
@@ -202,9 +204,14 @@ public class Syntax extends java_cup.runtime.lr_parser {
 
     /*
         Analiza los posibles errores semanticos que puedo tener el codigo que estamos analizando.
-        @param linea La linea de codigo que estamos analizand.
+        Falta componerlo aun 
+        @param linea La linea de codigo que estamos analizando.
     */
     public void sematic_error(RowTS linea){
+        RowET error = new RowET(linea.getLexema(),0,0,"Error semantico.");
+        ErrorTable.add(error);
+
+
         /*
         for(int i=0;i<SymbolTable.size();i++){
                 RowTS fila = SymbolTable.get(i);
@@ -273,8 +280,15 @@ class CUP$Syntax$actions {
 		int claseNombreright = ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()).right;
 		Object claseNombre = (Object)((java_cup.runtime.Symbol) CUP$Syntax$stack.peek()).value;
 
-            RowTS fila=new RowTS(claseNombre.toString(),Tokens.CLASS,"Master",claseNombreright,Tokens.CLASS.getDescripcion()); 
-            SymbolTable.addSimbolo(claseNombre.toString(),fila);
+            //RowTS fila=new RowTS(claseNombre.toString(),Tokens.CLASS,"Master",claseNombreright,Tokens.CLASS.getDescripcion()); 
+            Simbolo simTemp=new Simbolo(claseNombre.toString());
+            simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+            simTemp.addCampo("Ambito: ","Maestro");    
+            simTemp.addCampo("Linea: ",claseNombreright+1);    
+            simTemp.addCampo("Tipo: ",Tokens.CLASS);    
+            simTemp.addCampo("Descripcion:" ,"Nombre de la clase"); 
+   
+            SymbolTable.addSimbolo(claseNombre.toString(),simTemp);
         
               CUP$Syntax$result = parser.getSymbolFactory().newSymbol("NT$0",7, ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()), RESULT);
             }
@@ -404,9 +418,18 @@ ambito=nomIdent.toString();
 		int nomIdentright = ((java_cup.runtime.Symbol)CUP$Syntax$stack.elementAt(CUP$Syntax$top-3)).right;
 		Object nomIdent = (Object)((java_cup.runtime.Symbol) CUP$Syntax$stack.elementAt(CUP$Syntax$top-3)).value;
 
-                RowTS fila=new RowTS(nomIdent.toString(),Tokens.VOID,"Global",nomIdentright,Tokens.VOID.getDescripcion()); 
-                SymbolTable.addSimbolo(nomIdent.toString(),fila);
-                sematic_error(fila);
+                //RowTS fila=new RowTS(nomIdent.toString(),Tokens.VOID,"GLOBAL",nomIdentright,Tokens.VOID.getDescripcion()); 
+
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ","GLOBAL");    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ",Tokens.METHOD);    
+                simTemp.addCampo("Returno: ",Tokens.VOID);    
+                simTemp.addCampo("Descripcion: ","Nombre de un metodo"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);
+                //sematic_error(simTemp);
             
               CUP$Syntax$result = parser.getSymbolFactory().newSymbol("NT$2",9, ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()), RESULT);
             }
@@ -446,9 +469,20 @@ ambito=nomIdent.toString();
 		int nomIdentright = ((java_cup.runtime.Symbol)CUP$Syntax$stack.elementAt(CUP$Syntax$top-3)).right;
 		Object nomIdent = (Object)((java_cup.runtime.Symbol) CUP$Syntax$stack.elementAt(CUP$Syntax$top-3)).value;
 
-		RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,"Global",nomIdentright,Tokens.INT.getDescripcion()); 
-                SymbolTable.addSimbolo(nomIdent.toString(),fila);
-                sematic_error(fila);
+		//RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,"GLOBAL",nomIdentright,Tokens.INT.getDescripcion()); 
+                
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ","GLOBAL");    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ",Tokens.METHOD);    
+                simTemp.addCampo("Returno: ",Tokens.INT);    
+                simTemp.addCampo("Descripcion: ","Nombre de un metodo"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);    
+
+                //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+                //sematic_error(fila);
             
               CUP$Syntax$result = parser.getSymbolFactory().newSymbol("NT$4",11, ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()), RESULT);
             }
@@ -494,9 +528,21 @@ ambito=nomIdent.toString();
 		int nomIdentright = ((java_cup.runtime.Symbol)CUP$Syntax$stack.elementAt(CUP$Syntax$top-3)).right;
 		Object nomIdent = (Object)((java_cup.runtime.Symbol) CUP$Syntax$stack.elementAt(CUP$Syntax$top-3)).value;
 
-                RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,"Global",nomIdentright,Tokens.FLOAT.getDescripcion()); 
-                SymbolTable.addSimbolo(nomIdent.toString(),fila);
-                sematic_error(fila);
+                //RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,"GLOBAL",nomIdentright,Tokens.FLOAT.getDescripcion()); 
+                
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ","GLOBAL");    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ",Tokens.METHOD);    
+                simTemp.addCampo("Returno: ",Tokens.FLOAT);    
+                simTemp.addCampo("Descripcion: ","Nombre de un metodo"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);    
+    
+
+                //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+                //sematic_error(fila);
             
               CUP$Syntax$result = parser.getSymbolFactory().newSymbol("NT$6",13, ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()), RESULT);
             }
@@ -529,9 +575,21 @@ ambito=nomIdent.toString();
 		
 
                //nomIdent => Nombre del identificador
-               RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,nomIdentright,Tokens.INT.getDescripcion()); 
-               SymbolTable.addSimbolo(nomIdent.toString(),fila);
-               sematic_error(fila);
+               //RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,nomIdentright,Tokens.INT.getDescripcion()); 
+               
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ",ambito);    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ","Variable");    
+                simTemp.addCampo("Tipo Dato: ",Tokens.INT);    
+                simTemp.addCampo("Descripcion: ","Nombre de variable"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp); 
+
+
+               //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+               //sematic_error(fila);
         
               CUP$Syntax$result = parser.getSymbolFactory().newSymbol("DECLARACION",3, ((java_cup.runtime.Symbol)CUP$Syntax$stack.elementAt(CUP$Syntax$top-2)), ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()), RESULT);
             }
@@ -547,9 +605,20 @@ ambito=nomIdent.toString();
 		
 
                //nomIdent => Nombre del identificador
-               RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,nomIdentright,Tokens.FLOAT.getDescripcion()); 
-               SymbolTable.addSimbolo(nomIdent.toString(),fila);
-               sematic_error(fila);
+               //RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,nomIdentright,Tokens.FLOAT.getDescripcion()); 
+               
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ",ambito);    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ","Variable");    
+                simTemp.addCampo("Tipo Dato: ",Tokens.FLOAT);    
+                simTemp.addCampo("Descripcion: ","Nombre de variable"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp); 
+
+               //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+               //sematic_error(fila);
         
               CUP$Syntax$result = parser.getSymbolFactory().newSymbol("DECLARACION",3, ((java_cup.runtime.Symbol)CUP$Syntax$stack.elementAt(CUP$Syntax$top-2)), ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()), RESULT);
             }
@@ -565,9 +634,20 @@ ambito=nomIdent.toString();
 		
 
                //nomIdent => Nombre del identificador
-               RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,nomIdentright,Tokens.INT.getDescripcion()); 
-               SymbolTable.addSimbolo(nomIdent.toString(),fila);
-               sematic_error(fila);
+               //RowTS fila=new RowTS(nomIdent.toString(),Tokens.INT,ambito,nomIdentright,Tokens.INT.getDescripcion()); 
+               
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ",ambito);    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ","Variable");    
+                simTemp.addCampo("Tipo Dato: ",Tokens.INT);    
+                simTemp.addCampo("Descripcion: ","Nombre de variable"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);
+
+               //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+               //sematic_error(fila);
         
               CUP$Syntax$result = parser.getSymbolFactory().newSymbol("DECLARACION",3, ((java_cup.runtime.Symbol)CUP$Syntax$stack.elementAt(CUP$Syntax$top-4)), ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()), RESULT);
             }
@@ -583,9 +663,20 @@ ambito=nomIdent.toString();
 		
 
                //nomIdent => Nombre del identificador
-               RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,nomIdentright,Tokens.FLOAT.getDescripcion()); 
-               SymbolTable.addSimbolo(nomIdent.toString(),fila);
-               sematic_error(fila);
+               //RowTS fila=new RowTS(nomIdent.toString(),Tokens.FLOAT,ambito,nomIdentright,Tokens.FLOAT.getDescripcion()); 
+               
+                Simbolo simTemp=new Simbolo(nomIdent.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ",ambito);    
+                simTemp.addCampo("Linea: ",(nomIdentright+1));    
+                simTemp.addCampo("Tipo: ","Variable");    
+                simTemp.addCampo("Tipo Dato: ",Tokens.FLOAT);    
+                simTemp.addCampo("Descripcion: ","Nombre de variable"); 
+   
+                SymbolTable.addSimbolo(nomIdent.toString(),simTemp);
+
+               //SymbolTable.addSimbolo(nomIdent.toString(),fila);
+               //sematic_error(fila);
         
               CUP$Syntax$result = parser.getSymbolFactory().newSymbol("DECLARACION",3, ((java_cup.runtime.Symbol)CUP$Syntax$stack.elementAt(CUP$Syntax$top-4)), ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()), RESULT);
             }
@@ -601,12 +692,22 @@ ambito=nomIdent.toString();
 
 
 	//nomIdent => Nombre del identificador
-        RowTS fila=new RowTS(nombre.toString(),Tokens.CONSTRUCTOR,ambito,nombreright,Tokens.CONSTRUCTOR.getDescripcion()); 
+        //RowTS fila=new RowTS(nombre.toString(),Tokens.CONSTRUCTOR,ambito,nombreright,Tokens.CONSTRUCTOR.getDescripcion()); 
         if(SymbolTable.buscarSimbolo(nombre.toString()) != null){
-            SymbolTable.addSimbolo(nombre.toString()+"_C",fila);
+                
+                Simbolo simTemp=new Simbolo(nombre.toString());
+                simTemp.addCampo("Token: ",Tokens.IDENTIFICADOR);    
+                simTemp.addCampo("Ambito: ","GLOBAL");    
+                simTemp.addCampo("Linea: ",(nombreright+1));    
+                simTemp.addCampo("Tipo: ",Tokens.CONSTRUCTOR);       
+                simTemp.addCampo("Descripcion: ","Nombre del constructor"); 
+   
+                SymbolTable.addSimbolo(nombre.toString()+"_C",simTemp);
+            
+            //SymbolTable.addSimbolo(nombre.toString()+"_C",fila);
             ambito = nombre.toString();
         }else{
-            sematic_error(fila);
+            //sematic_error(fila);
         }
     
               CUP$Syntax$result = parser.getSymbolFactory().newSymbol("NT$7",14, ((java_cup.runtime.Symbol)CUP$Syntax$stack.peek()), RESULT);

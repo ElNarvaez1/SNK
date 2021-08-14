@@ -1,6 +1,6 @@
 public class Hola{
     int g;
-    int g;
+    int y;
     float t=10;
     public Hola(){
         float varConts;           
@@ -12,6 +12,6 @@ public class Hola{
         int mmm;
     }
     public int metodo2(){
-        int h;
+        int k;
     }
 }
